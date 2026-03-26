@@ -1,0 +1,94 @@
+# ----------------------
+# Node modules
+# ----------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ----------------------
+# Environment files
+# ----------------------
+.env
+.env.*
+.env.local
+
+# ----------------------
+# Logs
+# ----------------------
+logs
+*.log
+
+# ----------------------
+# OS files
+# ----------------------
+.DS_Store
+Thumbs.db
+
+# ----------------------
+# Editor / IDE
+# ----------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ----------------------
+# Build / dist
+# ----------------------
+dist/
+build/
+out/
+
+# ----------------------
+# Dependency folders
+# ----------------------
+vendor/
+__pycache__/
+*.pyc
+
+# ----------------------
+# Database files
+# ----------------------
+*.sqlite
+*.db
+
+# ----------------------
+# Temporary files
+# ----------------------
+tmp/
+temp/
+.cache/
+
+# ----------------------
+# Coverage / testing
+# ----------------------
+coverage/
+.nyc_output/
+
+# ----------------------
+# Next.js / React / Vite
+# ----------------------
+.next/
+.vite/
+.vercel/
+
+# ----------------------
+# Upload files (optional)
+# ----------------------
+uploads/
+public/uploads/
+
+# ----------------------
+# Secrets / keys
+# ----------------------
+config/secrets.json
+*.pem
+*.key
+
+# ----------------------
+# System files
+# ----------------------
+*.pid
+*.seed
+*.lock
