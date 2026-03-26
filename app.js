@@ -1,47 +1,62 @@
 const express = require("express");
-const app = express()
-const mongoose = require("mongoose")
+const app = express();
+const mongoose = require("mongoose");
 const path = require("path");
 const port = 8080;
-const methodOverride = require("method-override")
+const methodOverride = require("method-override");
 const moongooseURL = "mongodb://127.0.0.1:27017/wanderlust";
-const Listing = require("./models/listing.js")
+const Listing = require("./models/listing.js");
 async function main() {
-    await mongoose.connect(moongooseURL)
+  await mongoose.connect(moongooseURL);
 }
-main().then((res)=>{
-    console.log("MongoDB Connected")
-})
+main().then((res) => {
+  console.log("MongoDB Connected");
+});
 
 app.set("view engine", "ejs");
-app.set(path.join(__dirname,"views"));
+app.set(path.join(__dirname, "views"));
 
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
- 
+app.get("/", (req, res) => {
+  res.send(`root page`);
+});
 
+app.get("/listings", async (req, res) => {
+  const allListings = await Listing.find();
+  res.render("index.ejs", { allListings });
+  // console.log(allListings)
+});
+app.get("/listings/new", (req, res) => {
+  res.render("new.ejs");
+});
+app.post("/listings", async (req, res) => {
+  console.log(req.body);
+  let { title, description, price, image, location, country } = req.body;
+  console.log(title, description, price, image, location, country);
+  await Listing.insertOne({
+    title: title,
+    description: description,
+    price: price,
+    image: image,
+    location: location,
+    country: country,
+  }).then((result)=>{
+    console.log(result)
+  });
+  res.redirect("/listings")
+});
 
+app.get("/listings/:id", async (req, res) => {
+  let { id } = req.params;
+  let listing = await Listing.findById(id);
+  console.log(listing)
+  res.render("show.ejs", { listing });
+});
 
-
-app.get("/",(req,res)=>{
-    res.send(`root page`)
-})
-
-app.get("/listings",async (req,res)=>{
-    const allListings = await Listing.find();
-    res.render("index.ejs",{allListings})
-    // console.log(allListings)
-    
-})
-
-app.get("/listings/:id",async (req, res)=>{
-    let {id} = req.params;
-    let listing = await Listing.findById(id);
-    res.render("show.ejs", {listing});
-})
 // app.get("/testListing", async (req,res)=>{
 //     let sampleListing = new Listing({
 //         title:"My Home",
@@ -55,6 +70,7 @@ app.get("/listings/:id",async (req, res)=>{
 //     })
 //     res.send(sampleListing)
 // })
-app.listen(port, ()=>{
-    console.log(`Server Started on ${port}`)
-})
+
+app.listen(port, () => {
+  console.log(`Server Started on ${port}`);
+});
