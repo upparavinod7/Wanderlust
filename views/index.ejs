@@ -7,14 +7,29 @@
     <title>Document</title>
 </head>
 
-
+<style>
+    .listing{
+        display: flex;
+        justify-content: space-between;
+        width: 300px;
+        margin: 1rem;
+    }
+</style>
 <body>
     <h1>All listings</h1>
         <% allListings.map((listing)=>{%>
-            <a href="/listings/<%=listing._id%>">
+            <div class="listing">
+                 <a href="/listings/<%=listing._id%>">
                 <li><%=listing.title%></li>
             </a>
+            <form action="/listings/<%=listing._id%>/edit" method="get">
+                <button>Edit</button>
+            </form>
+            
+            </div>
             <% }) %>
+
+
 
             <div>
                 <a href="/listings/new">add new Place</a>

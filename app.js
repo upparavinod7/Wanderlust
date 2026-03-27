@@ -6,12 +6,16 @@ const port = 8080;
 const methodOverride = require("method-override");
 const moongooseURL = "mongodb://127.0.0.1:27017/wanderlust";
 const Listing = require("./models/listing.js");
+const { title } = require("process");
+
+
 async function main() {
   await mongoose.connect(moongooseURL);
 }
 main().then((res) => {
   console.log("MongoDB Connected");
 });
+
 
 app.set("view engine", "ejs");
 app.set(path.join(__dirname, "views"));
@@ -30,9 +34,12 @@ app.get("/listings", async (req, res) => {
   res.render("index.ejs", { allListings });
   // console.log(allListings)
 });
+
 app.get("/listings/new", (req, res) => {
   res.render("new.ejs");
 });
+
+
 app.post("/listings", async (req, res) => {
   console.log(req.body);
   let { title, description, price, image, location, country } = req.body;
@@ -44,18 +51,39 @@ app.post("/listings", async (req, res) => {
     image: image,
     location: location,
     country: country,
-  }).then((result)=>{
-    console.log(result)
+  }).then((result) => {
+    console.log(result);
   });
-  res.redirect("/listings")
+  res.redirect("/listings");
 });
+
 
 app.get("/listings/:id", async (req, res) => {
   let { id } = req.params;
   let listing = await Listing.findById(id);
-  console.log(listing)
+  console.log(listing);
   res.render("show.ejs", { listing });
 });
+
+app.get("/listings/:id/edit",async (req,res)=>{
+  let {id} = req.params;
+  // console.log(id)
+  let listing = await Listing.findById(id)
+    res.render("edit.ejs", {listing})
+})
+
+app.patch("/listings/:id", async (req, res)=>{
+  let {id} = req.params;
+  await Listing.findByIdAndUpdate(id,{
+    title:req.body.title,
+    description:req.body.description,
+    price:req.body.price,
+    image:req.body.image,
+    location:req.body.location,
+    country:req.body.country
+  })
+  res.redirect("/listings")
+})
 
 // app.get("/testListing", async (req,res)=>{
 //     let sampleListing = new Listing({
