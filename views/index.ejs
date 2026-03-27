@@ -8,36 +8,49 @@
 </head>
 
 <style>
-    .listing{
-        display: flex;
+    .listing {
+        display: grid;
+        grid-template-columns: 70% 15% 15%;
+        gap: 20px;
         justify-content: space-between;
         width: 300px;
         margin: 1rem;
+        gap: 20px;
     }
 </style>
+
 <body>
     <h1>All listings</h1>
-        <% allListings.map((listing)=>{%>
-            <div class="listing">
-                 <a href="/listings/<%=listing._id%>">
-                <li><%=listing.title%></li>
+    <div>
+        <form action="/listings/new" method="get">
+            <button>Create New post</button>
+        </form>
+    </div>
+    <% allListings.map((listing)=>{%>
+        <div class="listing">
+            <a href="/listings/<%=listing._id%>">
+                <li>
+                    <%=listing.title%>
+                </li>
             </a>
-            <form action="/listings/<%=listing._id%>/edit" method="get">
-                <button>Edit</button>
-            </form>
-
-            <form action="/listings/<%=listing._id%>?_method=DELETE" method="post">
-                <button>Delete</button>
-            </form>
-            
+            <div>
+                <form action="/listings/<%=listing._id%>/edit" method="get">
+                    <button>Edit</button>
+                </form>
             </div>
-            <% }) %>
-
-
 
             <div>
-                <a href="/listings/new">add new Place</a>
+                <form action="/listings/<%=listing._id%>?_method=DELETE" method="post">
+                    <button>Delete</button>
+                </form>
             </div>
+
+        </div>
+        <% }) %>
+
+
+
+
 </body>
 
 </html>

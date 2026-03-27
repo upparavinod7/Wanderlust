@@ -6,7 +6,6 @@ const port = 8080;
 const methodOverride = require("method-override");
 const moongooseURL = "mongodb://127.0.0.1:27017/wanderlust";
 const Listing = require("./models/listing.js");
-const { title } = require("process");
 
 
 async function main() {
@@ -42,16 +41,8 @@ app.get("/listings/new", (req, res) => {
 
 app.post("/listings", async (req, res) => {
   console.log(req.body);
-  let { title, description, price, image, location, country } = req.body;
-  console.log(title, description, price, image, location, country);
-  await Listing.insertOne({
-    title: title,
-    description: description,
-    price: price,
-    image: image,
-    location: location,
-    country: country,
-  }).then((result) => {
+  let listing = req.body.listing;
+  await Listing.insertOne(listing).then((result) => {
     console.log(result);
   });
   res.redirect("/listings");
@@ -74,13 +65,10 @@ app.get("/listings/:id/edit",async (req,res)=>{
 
 app.patch("/listings/:id", async (req, res)=>{
   let {id} = req.params;
-  await Listing.findByIdAndUpdate(id,{
-    title:req.body.title,
-    description:req.body.description,
-    price:req.body.price,
-    image:req.body.image,
-    location:req.body.location,
-    country:req.body.country
+  let listing = req.body.listing;
+  // console.log(req.body)
+  await Listing.findByIdAndUpdate(id,listing).then((result)=>{
+    console.log(result)
   })
   res.redirect("/listings")
 })
