@@ -85,6 +85,14 @@ app.patch("/listings/:id", async (req, res)=>{
   res.redirect("/listings")
 })
 
+app.delete("/listings/:id", async (req,res)=>{
+  let {id} = req.params;
+  await Listing.findByIdAndDelete(id).then((res)=>{
+    console.log(res)
+  })
+  res.redirect("/listings")
+})
+
 // app.get("/testListing", async (req,res)=>{
 //     let sampleListing = new Listing({
 //         title:"My Home",
