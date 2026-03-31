@@ -4,12 +4,13 @@ const mongoose = require("mongoose");
 const path = require("path");
 const port = 8080;
 const methodOverride = require("method-override");
-const moongooseURL = "mongodb://127.0.0.1:27017/wanderlust";
+const mongooseURL = "mongodb://127.0.0.1:27017/wanderlust";
 const Listing = require("./models/listing.js");
+const User = require("./models/user.js");
 
 
 async function main() {
-  await mongoose.connect(moongooseURL);
+  await mongoose.connect(mongooseURL);
 }
 main().then((res) => {
   console.log("MongoDB Connected");
@@ -27,6 +28,56 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send(`root page`);
 });
+
+app.get("/signup", (req, res) => {
+  res.render("signup.ejs")
+})
+app.post("/signup/success", async (req, res) => {
+  try {
+    let user = req.body.user;
+ 
+    console.log(user);
+
+    let checking = await User.findOne({ email: user.email });
+
+    if (!checking) {
+      await User.create(user);
+      alert("email already exists")
+      return res.redirect("/listings");
+    } else {
+      return res.send("Email  already exists");
+    }
+
+  } catch (err) {
+    console.log(err);
+    res.send("Error occurred");
+  }
+});
+
+app.get("/login", (req,res)=>{
+  res.render("login.ejs")
+})
+app.post("/login/success",async  (req,res)=>{
+  let user = req.body.user;
+  console.log(user)
+  try {
+    let userDetails = await User.findOne({email:user.email});
+    if(!userDetails){
+      res.send(`${user.email} does not exists`)
+    }
+    else{
+      if(userDetails.password === user.password){
+        res.send("Login successfull")
+      }
+      else{
+        res.send("Wrong password")
+      }
+    }
+  } catch (error) {
+    res.send("Error Occurred")
+  }
+})
+
 
 app.get("/listings", async (req, res) => {
   const allListings = await Listing.find();
@@ -56,26 +107,26 @@ app.get("/listings/:id", async (req, res) => {
   res.render("show.ejs", { listing });
 });
 
-app.get("/listings/:id/edit",async (req,res)=>{
-  let {id} = req.params;
+app.get("/listings/:id/edit", async (req, res) => {
+  let { id } = req.params;
   // console.log(id)
   let listing = await Listing.findById(id)
-    res.render("edit.ejs", {listing})
+  res.render("edit.ejs", { listing })
 })
 
-app.patch("/listings/:id", async (req, res)=>{
-  let {id} = req.params;
+app.put("/listings/:id", async (req, res) => {
+  let { id } = req.params;
   let listing = req.body.listing;
   // console.log(req.body)
-  await Listing.findByIdAndUpdate(id,listing).then((result)=>{
+  await Listing.findByIdAndUpdate(id, listing).then((result) => {
     console.log(result)
   })
   res.redirect("/listings")
 })
 
-app.delete("/listings/:id", async (req,res)=>{
-  let {id} = req.params;
-  await Listing.findByIdAndDelete(id).then((res)=>{
+app.delete("/listings/:id", async (req, res) => {
+  let { id } = req.params;
+  await Listing.findByIdAndDelete(id).then((res) => {
     console.log(res)
   })
   res.redirect("/listings")
@@ -97,4 +148,5 @@ app.delete("/listings/:id", async (req,res)=>{
 
 app.listen(port, () => {
   console.log(`Server Started on ${port}`);
+  console.log(`http://localhost:8080/`)
 });
