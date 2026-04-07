@@ -1,57 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
+<%- layout("/layouts/boilerplate.ejs") %>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-
-<style>
-    .listing {
-        width: 400px;
-        display: grid;
-        grid-template-columns: 70% 15% 15%;
-        gap: 20px;
-        justify-content: space-between;
-        width: 300px;
-        margin: 1rem;
-        gap: 20px;
-    }
-</style>
-
-<body>
-    <h1>All listings</h1>
-    <div>
+    <body>
+        <h3>All listings</h3>
+        <!-- <div>
         <form action="/listings/new" method="get">
             <button>Create New post</button>
         </form>
-    </div>
-    <% allListings.map((listing)=>{%>
-        <div class="listing">
-            <a href="/listings/<%=listing._id%>">
-                <li>
-                    <%=listing.title%>
-                </li>
-            </a>
-            <div>
-                <form action="/listings/<%=listing._id%>/edit" method="get">
-                    <button>Edit</button>
-                </form>
-            </div>
+    </div> -->
+        <div class="row  row-cols-lg-3 row-cols-md-2 row-cols-sm-1 row-cols-xsm-1">
+            <% allListings.map((listing)=>{%>
+                <a href="listings/<%=listing._id%>" class="listing-link">
+                    <div class="card col" style="width: 20rem;">
+                        <img src=<%=listing.image%> class="card-img-top" alt="listing" style="height:20rem">
+                        <div class="card-img-overlay">
+                            <p class="card-text"><%=listing.description %></p>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <b>
+                                    <%=listing.title%>
+                                </b>
+                            </h5>
+                            <p class="card-text">
 
-            <div>
-                <form action="/listings/<%=listing._id%>?_method=DELETE" method="post">
-                    <button>Delete</button>
-                </form>
-            </div>
-
+                                &#8377;<%=listing.price.toLocaleString("en-IN") %>
+                            </p>
+                        </div>
+                    </div>
+                </a>
+                <% }) %>
         </div>
-        <% }) %>
+        <!-- <% allListings.map((listing)=>{%>
+            <div class="listing">
+                <a href="/listings/<%=listing._id%>">
+                    <li>
+                        <%=listing.title%>
+                    </li>
+                </a>
+                <div>
+                    <form action="/listings/<%=listing._id%>/edit" method="get">
+                        <button>Edit</button>
+                    </form>
+                </div>
+
+
+            </div>
+            <% }) %> -->
 
 
 
 
-</body>
+    </body>
 
-</html>
+    </html>

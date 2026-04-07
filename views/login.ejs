@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-</head>
+<%- layout("/layouts/boilerplate.ejs") %>
 <body>
     <form action="/login/success" method="post">
         <input type="email" name="user[email]" id="email">
@@ -12,4 +6,3 @@
         <button>Login</button>
     </form>
 </body>
-</html>

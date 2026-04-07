@@ -7,7 +7,7 @@ const methodOverride = require("method-override");
 const mongooseURL = "mongodb://127.0.0.1:27017/wanderlust";
 const Listing = require("./models/listing.js");
 const User = require("./models/user.js");
-
+const ejsMate = require("ejs-mate")
 
 async function main() {
   await mongoose.connect(mongooseURL);
@@ -17,11 +17,12 @@ main().then((res) => {
 });
 
 
+app.engine("ejs", ejsMate)
 app.set("view engine", "ejs");
 app.set(path.join(__dirname, "views"));
 
 app.use(methodOverride("_method"));
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "/public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -35,7 +36,7 @@ app.get("/signup", (req, res) => {
 app.post("/signup/success", async (req, res) => {
   try {
     let user = req.body.user;
- 
+
     console.log(user);
 
     let checking = await User.findOne({ email: user.email });
@@ -54,22 +55,23 @@ app.post("/signup/success", async (req, res) => {
   }
 });
 
-app.get("/login", (req,res)=>{
+app.get("/login", (req, res) => {
   res.render("login.ejs")
-})
-app.post("/login/success",async  (req,res)=>{
+});
+
+app.post("/login/success", async (req, res) => {
   let user = req.body.user;
   console.log(user)
   try {
-    let userDetails = await User.findOne({email:user.email});
-    if(!userDetails){
+    let userDetails = await User.findOne({ email: user.email });
+    if (!userDetails) {
       res.send(`${user.email} does not exists`)
     }
-    else{
-      if(userDetails.password === user.password){
+    else {
+      if (userDetails.password === user.password) {
         res.send("Login successfull")
       }
-      else{
+      else {
         res.send("Wrong password")
       }
     }
